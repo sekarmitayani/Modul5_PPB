@@ -47,25 +47,35 @@ export default function EditRecipePage({ recipeId, onBack, onSuccess }) {
             is_featured: recipe.is_featured || false,
           });
           
-          setCurrentImageUrl(recipe.image_url || '');
+          // Handle image URL - ensure it's a complete URL
+          const imageUrl = recipe.image_url 
+            ? recipe.image_url.startsWith('http') 
+              ? recipe.image_url 
+              : recipe.image_url.startsWith('/') 
+                ? `${import.meta.env.VITE_API_BASE_URL}${recipe.image_url}`
+                : `${import.meta.env.VITE_API_BASE_URL}/${recipe.image_url}`
+            : '';
+          setCurrentImageUrl(imageUrl);
+          
           setIngredients(recipe.ingredients && recipe.ingredients.length > 0 
             ? recipe.ingredients 
             : [{ name: '', quantity: '' }]
           );
           
-          // Convert steps to array of strings if they're objects
-          let stepsArray = [''];
+          // Handle steps data
           if (recipe.steps && recipe.steps.length > 0) {
-            stepsArray = recipe.steps.map(step => {
-              // If step is an object with a 'step' property, extract it
-              if (typeof step === 'object' && step.step) {
-                return step.step;
+            const processedSteps = recipe.steps.map(step => {
+              if (typeof step === 'string') return step;
+              if (typeof step === 'object') {
+                if (step.step) return step.step;
+                if (step.description) return step.description;
               }
-              // If step is already a string, use it
-              return typeof step === 'string' ? step : '';
-            });
+              return '';
+            }).filter(step => step.trim() !== '');
+            setSteps(processedSteps.length > 0 ? processedSteps : ['']);
+          } else {
+            setSteps(['']);
           }
-          setSteps(stepsArray);
         } else {
           throw new Error('Gagal memuat data resep');
         }
@@ -359,7 +369,7 @@ export default function EditRecipePage({ recipeId, onBack, onSuccess }) {
                     Gambar Baru
                   </div>
                 </div>
-              ) : currentImageUrl && currentImageUrl.trim() !== '' ? (
+              ) : currentImageUrl ? (
                 /* Show current image */
                 <div className="relative">
                   <img

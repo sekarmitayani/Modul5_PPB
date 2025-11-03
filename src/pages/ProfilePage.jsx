@@ -1,12 +1,11 @@
 // src/pages/ProfilePage.jsx
 import { useEffect, useState } from 'react';
-import userService, { getUserProfile, updateAvatar, updateUsername, updateBio } from '../services/userService';
+import userService, { getUserProfile, updateAvatar, updateUsername } from '../services/userService';
 
 export default function ProfilePage() {
   const [profile, setProfile] = useState(getUserProfile());
   const [editingName, setEditingName] = useState(false);
   const [nameInput, setNameInput] = useState(profile.username || 'Pengguna');
-  const [bioInput, setBioInput] = useState(profile.bio || '');
   const [favorites, setFavorites] = useState([]);
   const [favoriteRecipes, setFavoriteRecipes] = useState([]);
   const [reviews, setReviews] = useState([]);
@@ -22,7 +21,6 @@ export default function ProfilePage() {
     const p = getUserProfile();
     setProfile(p);
     setNameInput(p.username || 'Pengguna');
-    setBioInput(p.bio || '');
   };
 
   const handleAvatarChange = async (e) => {
@@ -45,13 +43,6 @@ export default function ProfilePage() {
     if (res && res.success) {
       setProfile(res.data);
       setEditingName(false);
-    }
-  };
-
-  const handleSaveBio = () => {
-    const res = updateBio(bioInput || '');
-    if (res && res.success) {
-      setProfile(res.data);
     }
   };
 
@@ -129,13 +120,7 @@ export default function ProfilePage() {
                   </div>
                 )}
               </div>
-
-              <textarea value={bioInput} onChange={(e) => setBioInput(e.target.value)} rows={3} className="w-full mt-4 px-3 py-2 border rounded-md" placeholder="Tulis bio singkat..." />
-              <div className="mt-2 w-full flex justify-end">
-                <button onClick={handleSaveBio} className="px-4 py-2 bg-indigo-600 text-white rounded-md">Simpan Bio</button>
-              </div>
-
-              <p className="text-sm text-gray-500 mt-4">ID: <code className="bg-slate-100 px-2 py-1 rounded">{profile.userId}</code></p>
+              <p className="text-sm text-gray-500 mt-4">ID:21120123120012</p>
             </div>
           </div>
 
