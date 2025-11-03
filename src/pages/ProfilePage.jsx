@@ -75,10 +75,10 @@ export default function ProfilePage() {
   };
 
   const loadUserReviews = () => {
-    const stored = JSON.parse(localStorage.getItem('user_reviews') || '[]');
-    // show only reviews for current user identifier
-    const userId = profile.userId || userService.getUserIdentifier();
-    setReviews(my.sort((a,b) => new Date(b.created_at) - new Date(a.created_at)));
+  const stored = JSON.parse(localStorage.getItem('user_reviews') || '[]');
+  // show only reviews for current user identifier
+  const userId = profile.userId || userService.getUserIdentifier();
+  setReviews(stored.sort((a,b) => new Date(b.created_at) - new Date(a.created_at)));
   };
 
   return (
